@@ -10,6 +10,7 @@ set -e
 #   PASSWORD
 #   ANONYMOUS_METHODS
 #   SSL_CERT
+#   CERT_PATH
 
 # Just in case this environment variable has gone missing.
 HTTPD_PREFIX="${HTTPD_PREFIX:-/usr/local/apache2}"
@@ -82,6 +83,11 @@ if [ "${SSL_CERT:-none}" = "selfsigned" ]; then
     if [ ! -e /privkey.pem ] || [ ! -e /cert.pem ]; then
         openssl req -x509 -newkey rsa:2048 -days 1000 -nodes \
             -keyout /privkey.pem -out /cert.pem -subj "/CN=${SERVER_NAME:-selfsigned}"
+    fi
+else
+    if [ "x$CERT_PATH" != "x" ] && [ -e "${PATH}/privkey.pem" ] && [ -e "${PATH}/cert.pem" ] ; then
+        ln -s "${PATH}/privkey.pem" "/";
+        ln -s "${PATH}/cert.pem" "/";
     fi
 fi
 
