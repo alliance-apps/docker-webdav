@@ -85,11 +85,10 @@ if [ "${SSL_CERT:-none}" = "selfsigned" ]; then
             -keyout /privkey.pem -out /cert.pem -subj "/CN=${SERVER_NAME:-selfsigned}"
     fi
 else
-    if [ "x$CERT_PATH" != "x" ] && [ -e "${CERT_PATH}/privkey.pem" ] && [ -e "${CERT_PATH}/cert.pem" ] ; then
-        if [! -e "/privkey.pem" ] && [! -e "/cert.pem" ] ; then
-            ln -s "${CERT_PATH}/privkey.pem" "/";
-            ln -s "${CERT_PATH}/cert.pem" "/";
-        fi
+    if [ "x$CERT_PATH" != "x" ] && [ ! -e "/privkey.pem" ] && [ ! -e "/cert.pem" ] && \
+       [ -e "${CERT_PATH}/privkey.pem" ] && [ -e "${CERT_PATH}/cert.pem" ] ; then
+        ln -s "${CERT_PATH}/privkey.pem" "/";
+        ln -s "${CERT_PATH}/cert.pem" "/";
     fi
 fi
 
